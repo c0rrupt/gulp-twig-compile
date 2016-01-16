@@ -4,6 +4,13 @@ var twig = twigModule.twig;
 var gutil = require('gulp-util');
 var merge = require('merge');
 
+// Turn in autoescaping by default for compiled templates
+twigModule.extend(function(Twig) {
+  Twig.compiler.wrap = function(id, tokens) {
+    return 'twig({id:"'+id.replace('"', '\\"')+'", data:'+tokens+', precompiled: true, autoescape: true});\n';
+  };
+});
+
 var deleteTemplateById = function(id) {
   twigModule.extend(function(Twig) {
     delete Twig.Templates.registry[id];
